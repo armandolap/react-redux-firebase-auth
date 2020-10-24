@@ -1,4 +1,6 @@
 import {
+    ISSIGNEDIN_SUCCESS,
+    ISSIGNEDIN_ERROR,
     SIGNUP_SUCCESS,
     SIGNUP_ERROR,
     SIGNIN_SUCCESS,
@@ -18,6 +20,8 @@ const INITIAL_STATE = {
 
 export default function (state = INITIAL_STATE, action) {
     switch (action.type) {
+        case ISSIGNEDIN_SUCCESS:
+        case ISSIGNEDIN_ERROR:
         case SIGNIN_SUCCESS:
         case SIGNOUT_SUCCESS:
         case SIGNIN_GOOGLE_SUCCESS:

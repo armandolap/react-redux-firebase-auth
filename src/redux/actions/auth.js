@@ -1,4 +1,6 @@
 import {
+    ISSIGNEDIN_SUCCESS,
+    ISSIGNEDIN_ERROR,
     SIGNUP_SUCCESS,
     SIGNUP_ERROR,
     SIGNIN_SUCCESS,
@@ -11,8 +13,36 @@ import {
     RESET_SUCCESS,
     RESET_ERROR
 } from './types'
+
 import firebaseApp from '../../services/Firebase.config'
 import firebase from 'firebase/app'
+
+// Check if User is signed in
+export const userIsSignedIn = () => async dispatch => {
+    firebaseApp
+        .auth()
+        .onAuthStateChanged()
+        .then(user => {
+            if(user){
+                dispatch({
+                    type: ISSIGNEDIN_SUCCESS,
+                    payload: { Uid: true }
+                })
+            }else{
+                dispatch({
+                    type: ISSIGNEDIN_SUCCESS,
+                    payload: { Uid: false }
+                })
+            }
+        })
+        .catch((err) => {
+            dispatch({
+                type: ISSIGNEDIN_ERROR,
+                payload: { Uid: false }
+            })
+        })
+}
+
 // Signup with Firebase
 export const signup = (email, password, nickName) => async dispatch => {
     firebaseApp
