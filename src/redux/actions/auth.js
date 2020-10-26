@@ -1,6 +1,6 @@
 import {
-    ISSIGNEDIN_SUCCESS,
-    ISSIGNEDIN_ERROR,
+    USER_IS_SIGNED,
+    USER_IS_NOT_SIGNED,
     SIGNUP_SUCCESS,
     SIGNUP_ERROR,
     SIGNIN_SUCCESS,
@@ -16,43 +16,32 @@ import {
 
 import firebaseApp from '../../services/Firebase.config'
 import firebase from 'firebase/app'
-
 // Check if User is signed in
 export const userIsSignedIn = () => async dispatch => {
-    firebaseApp
-        .auth()
-        .onAuthStateChanged()
-        .then(user => {
-            if(user){
-                dispatch({
-                    type: ISSIGNEDIN_SUCCESS,
-                    payload: { Uid: true }
-                })
-            }else{
-                dispatch({
-                    type: ISSIGNEDIN_SUCCESS,
-                    payload: { Uid: false }
-                })
-            }
-        })
-        .catch((err) => {
+    firebaseApp.auth().onAuthStateChanged((dataUser) => {
+        if (dataUser) {
             dispatch({
-                type: ISSIGNEDIN_ERROR,
+                type: USER_IS_SIGNED,
+                payload: { Uid: true }
+            })
+        } else {
+            dispatch({
+                type: USER_IS_NOT_SIGNED,
                 payload: { Uid: false }
             })
-        })
+        }
+    })
 }
-
 // Signup with Firebase
 export const signup = (email, password, nickName) => async dispatch => {
     firebaseApp
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((userCredentials) => { // Signup successful
-            userCredentials.user.updateProfile({
+        .then((dataUser) => { // Signup successful
+            dataUser.user.updateProfile({
                 displayName: nickName
             }).then(() => {
-                userCredentials.user.sendEmailVerification()
+                dataUser.user.sendEmailVerification()
                     .then(() => { // email ok
                         dispatch({
                             type: SIGNUP_SUCCESS,
@@ -77,11 +66,11 @@ export const signin = (email, password) => async dispatch => {
     firebaseApp
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(data => {
-            if (data.user.emailVerified) {
+        .then(dataUser => {
+            if (dataUser.user.emailVerified) {
                 dispatch({
                     type: SIGNIN_SUCCESS,
-                    payload: { Uid: data.user.uid }
+                    payload: { Uid: dataUser.user.uid }
                 })
             } else {
                 dispatch({
@@ -103,10 +92,10 @@ export const signinGoogle = (email, password) => async dispatch => {
     firebaseApp
         .auth()
         .signInWithPopup(provider)
-        .then((user) => {
+        .then((dataUser) => {
             dispatch({ 
                 type: SIGNIN_GOOGLE_SUCCESS,
-                payload: { Uid: user.user.uid }
+                payload: { Uid: dataUser.user.uid }
             })
         })
         .catch((err) => { 

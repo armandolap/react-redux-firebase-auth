@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { userIsSignedIn } from '../redux/actions/auth'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
@@ -14,17 +14,15 @@ function AppRouter() {
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(userIsSignedIn())
-    })
+    dispatch(userIsSignedIn())
 
     return (
         <BrowserRouter>
             <Switch>
-                <PublicRoute exact path='/' component={SignIn} />
+                <PublicRoute exact={true} path='/' component={SignIn} />
                 <PublicRoute path='/register' component={SignUp} />
                 <PublicRoute path='/reset' component={ResetPass} />
-                <PrivateRoute path='/auth' component={Auth} />
+                <PrivateRoute path='/dashboard' component={Auth} />
                 <Route component={_404} />
             </Switch>
         </BrowserRouter>
