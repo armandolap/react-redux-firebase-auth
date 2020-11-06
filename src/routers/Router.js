@@ -7,7 +7,7 @@ import PublicRoute from './PublicRoute'
 import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 import ResetPass from '../pages/ResetPass'
-import _404 from '../pages/_404'
+import NotFound from '../pages/NotFound'
 import Auth from '../pages/Auth'
 
 function AppRouter() {
@@ -19,11 +19,11 @@ function AppRouter() {
     return (
         <BrowserRouter>
             <Switch>
-                <PublicRoute exact={true} path='/' component={SignIn} />
+                <PublicRoute exact path='/' component={SignIn} />
                 <PublicRoute path='/register' component={SignUp} />
                 <PublicRoute path='/reset' component={ResetPass} />
                 <PrivateRoute path='/dashboard' component={Auth} />
-                <Route component={_404} />
+                <Route><NotFound /></Route>
             </Switch>
         </BrowserRouter>
     )

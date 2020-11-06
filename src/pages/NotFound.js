@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-function _404() {
+function NotFound() {
 
     const classes = useStyles()
 
@@ -33,5 +33,5 @@ function _404() {
     )
 }
 
-export default _404
+export default NotFound
 
