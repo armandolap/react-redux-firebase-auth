@@ -23,7 +23,11 @@ const theme = createMuiTheme({
 const useStyles = makeStyles({
     appMain: {
         margin: '0',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        /* footer abajo */
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh'
     }
 })
 

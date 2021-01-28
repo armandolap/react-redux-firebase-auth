@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center'
     },
+    main: {
+        flex: 1
+    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1)
@@ -54,7 +57,7 @@ function ResetPassForm() {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
                 {resetRedux.attempt

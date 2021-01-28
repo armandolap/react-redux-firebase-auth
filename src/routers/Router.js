@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { userIsSignedIn } from '../redux/actions/auth'
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import PrivateRoute from './PrivateRoute'
 import PublicRoute from './PublicRoute'
 import SignIn from '../pages/SignIn'
@@ -13,7 +13,6 @@ import Auth from '../pages/Auth'
 function AppRouter() {
 
     const dispatch = useDispatch()
-
     dispatch(userIsSignedIn())
 
     return (
@@ -29,7 +28,7 @@ function AppRouter() {
     )
 }
 
-export default AppRouter;
+export default AppRouter
 
 
 

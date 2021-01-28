@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { signin, signinGoogle } from '../redux/actions/auth'
 import { Button, FormControlLabel, Checkbox } from '@material-ui/core'
-import { Container, CssBaseline, Link, Grid, Box, Typography } from '@material-ui/core'
+import { Container, CssBaseline, Link, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Google } from '@material-ui/icons'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
-import Copyright from './Copyright'
 import AlertMessage from './AlertMessage'
 
 const useStyles = makeStyles((theme) => ({
@@ -15,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
+    },
+    main: {
+        flex: 1
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -61,7 +63,7 @@ function SignInForm() {
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
                 {signInRedux.attempt
@@ -136,9 +138,6 @@ function SignInForm() {
                     </Grid>
                 </ValidatorForm>
             </div>
-            <Box mt={8}>
-                <Copyright href={"https://github.com/armandolap"} linkText={"GitHub:armandolap"} />
-            </Box>
         </Container>
     );
 }

@@ -11,6 +11,6 @@ var firebaseConfig = {
     appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 }
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig)
 
 export default firebaseApp
