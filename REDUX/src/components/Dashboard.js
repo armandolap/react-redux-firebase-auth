@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { signout } from '../redux/actions/auth'
 import { Container, CssBaseline, Typography, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import AlertMessage from './AlertMessage'
-
-import firebaseApp from '../services/Firebase.config'
 
 const useStyles = makeStyles((theme) => ({
     pageContent: {
@@ -32,49 +31,19 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function Dashboard() {
-    // Material UI 
+
     const classes = useStyles()
-    // state 
-    const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
-    const [message, setMessage] = useState('')
-    // SignOut with Firebase
-    const signout = () => {
-        try {
-            firebaseApp
-                .auth()
-                .signOut()
-                .then(() => {
-                    setAttempt(true)
-                    setAlertType('success')
-                    setMessage("Correct LogOut")
-                    // setTimeout(function () { window.location.reload() }, 3000) // reload
-                })
-                .catch(() => {
-                    setAttempt(true)
-                    setAlertType('error')
-                    setMessage('Error, we were not able to log you out. Please try again.')
-                })
-        } catch (err) {
-            setAttempt(true)
-            setAlertType('error')
-            setMessage(err.message)
-        }
-    }
+    const dispatch = useDispatch()
     // logout submit
     const handleSubmit = e => {
         e.preventDefault()
-        signout()
+        dispatch(signout())
     }
 
     return (
         <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
-                {attempt
-                    ? <AlertMessage severity={alertType} text={message} />
-                    : false
-                }
                 <Typography component="h1" variant="h5">
                     Dashboard
                 </Typography>

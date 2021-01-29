@@ -1,24 +1,25 @@
 import React from 'react'
+import Copyright from './Copyright'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
-    header: {
+    footer: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '10px',
+        padding: '20px',
         color: '#fff',
         backgroundColor: '#000'
     }
 }))
 
-function Header() {
+function Footer() {
     const classes = useStyles()
     return (
-        <header className={classes.header}>
-            <h2>REACT FIREBASE AUTH</h2>
-        </header>
+        <footer className={classes.footer}>
+            <Copyright href={"https://github.com/armandolap"} linkText={"GitHub:armandolap"} />
+        </footer>
     )
 }
 
-export default Header
+export default Footer

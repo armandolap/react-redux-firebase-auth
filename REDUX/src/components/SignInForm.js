@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { signin, signinGoogle } from '../redux/actions/auth'
 import { Button, FormControlLabel, Checkbox } from '@material-ui/core'
 import { Container, CssBaseline, Link, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Google } from '@material-ui/icons'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AlertMessage from './AlertMessage'
-
-import firebaseApp from '../services/Firebase.config'
-import firebase from 'firebase/app'
 
 const useStyles = makeStyles((theme) => ({
     pageContent: {
@@ -36,58 +35,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function SignInForm() {
-    // Material UI 
+
     const classes = useStyles()
-    // state 
+    const dispatch = useDispatch()
+    const signInRedux = useSelector((state) => state.data.auth)
+
     const [state, setState] = useState({
         email: '',
         password: ''
     })
-    const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
-    const [message, setMessage] = useState('')
-    // Signin with Firebase
-    const signin = (email, password) => {
-        firebaseApp
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(dataUser => {
-                if (dataUser.user.emailVerified) { // login ok
-                    setAttempt(true)
-                    setAlertType('success')
-                    setMessage("Correct LogIn")
-                    // setTimeout(function () { window.location.reload() }, 3000) // reload
-                } else {
-                    setAttempt(true)
-                    setAlertType('error')
-                    setMessage("You haven't verified your e-mail address.")
-                }
-            })
-            .catch((err) => {
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // Signin with Google Firebase
-    const signinGoogle = (email, password) => {
-        const provider = new firebase.auth.GoogleAuthProvider()
-        firebaseApp
-            .auth()
-            .signInWithPopup(provider)
-            .then((dataUser) => {
-                setAttempt(true)
-                setAlertType('success')
-                setMessage("Correct LogIn")
-                // setTimeout(function () { window.location.reload() }, 3000) // reload
-            })
-            .catch((err) => {
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // form inputs values
+
     const handleChange = e => {
         const value = e.target.value;
         setState({
@@ -97,20 +54,20 @@ function SignInForm() {
     }
     // login google
     const handleGoogleButton = () => {
-        signinGoogle(state.email, state.password)
+        dispatch(signinGoogle(state.email, state.password))
     }
     // login email
     const handleSubmit = e => {
         e.preventDefault()
-        signin(state.email, state.password)
+        dispatch(signin(state.email, state.password))
     }
 
     return (
         <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
-                {attempt
-                    ? <AlertMessage severity={alertType} text={message} />
+                {signInRedux.attempt
+                    ? <AlertMessage severity={signInRedux.alertType} text={signInRedux.message} />
                     : false
                 }
                 <Typography component="h1" variant="h5">

@@ -1,4 +1,6 @@
 import React from 'react'
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core'
 import Routes from './routers/Router'
 
@@ -34,11 +36,13 @@ function App() {
     const classes = useStyles()
 
     return (
-        <ThemeProvider theme={theme}>
-            <div className={classes.appMain}>
-                <Routes />
-            </div>
-        </ThemeProvider>
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <div className={classes.appMain}>
+                    <Routes />
+                </div>
+            </ThemeProvider>
+        </Provider>
     );
 }
 

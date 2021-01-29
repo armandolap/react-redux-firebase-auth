@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { resetPassword } from '../redux/actions/auth'
 import { Container, CssBaseline, Link, Grid, Typography, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AlertMessage from './AlertMessage'
-
-import firebaseApp from '../services/Firebase.config'
 
 const useStyles = makeStyles((theme) => ({
     pageContent: {
@@ -33,51 +33,34 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function ResetPassForm() {
-    // Material UI 
+
     const classes = useStyles()
-    // state 
+    const dispatch = useDispatch()
+    const resetRedux = useSelector((state) => state.data.auth)
+
     const [state, setState] = useState({
-        email: ''
+        email: '',
     })
-    const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
-    const [message, setMessage] = useState('')
-    // Reset password with Firebase
-    const resetPassword = email  => {
-        firebaseApp
-            .auth()
-            .sendPasswordResetEmail(email)
-            .then(() => {
-                setAttempt(true)
-                setAlertType('success')
-                setMessage("Check your inbox. We've sent you a secured reset link by e-mail.")
-            })
-            .catch((err) => {
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // form inputs values
+
     const handleChange = e => {
         const value = e.target.value;
         setState({
-            ...state.email,
+            ...state,
             [e.target.name]: value
         })
     }
     // reset password
     const handleSubmit = e => {
         e.preventDefault()
-        resetPassword(state.email)
+        dispatch(resetPassword(state.email))
     }
 
     return (
         <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
-                {attempt
-                    ? <AlertMessage severity={alertType} text={message} />
+                {resetRedux.attempt
+                    ? <AlertMessage severity={resetRedux.alertType} text={resetRedux.message} />
                     : false
                 }
                 <Typography component="h1" variant="h5">

@@ -1,9 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 
-function PublicRoute({ signed: Signed, component: Component, ...rest }) {
+function PublicRoute({ isAuthenticated, component: Component, ...rest }) {
     return (
-        Signed
+        isAuthenticated
             ? <Redirect to='/dashboard' />
             : (
                 <Route {...rest} component={(props) => (
@@ -13,4 +14,8 @@ function PublicRoute({ signed: Signed, component: Component, ...rest }) {
     )
 }
 
-export default PublicRoute
+const mapStatetoProps = (state) => ({
+    isAuthenticated: state.data.auth.Uid
+})
+
+export default connect(mapStatetoProps)(PublicRoute)

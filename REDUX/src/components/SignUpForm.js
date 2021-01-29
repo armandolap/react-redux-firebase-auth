@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { signup } from '../redux/actions/auth'
 import { Container, CssBaseline, Link, Grid, Typography, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AlertMessage from './AlertMessage'
-
-import firebaseApp from '../services/Firebase.config'
 
 const useStyles = makeStyles((theme) => ({
     pageContent: {
@@ -33,19 +33,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function SignUpForm() {
-    // Material UI 
+
     const classes = useStyles()
-    // state 
+    const dispatch = useDispatch()
+    const signUpRedux = useSelector((state) => state.data.auth)
+
     const [state, setState] = useState({
         nickName: '',
         email: '',
         password: '',
-        rpassword: '',
+        rpassword: ''
     })
-    const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
-    const [message, setMessage] = useState('')
-    // validation 
+
     useEffect(() => {
         ValidatorForm.addValidationRule('isPassLength', (value) => {
             if (value.length < 6) return false
@@ -56,33 +55,7 @@ function SignUpForm() {
             return true
         })
     })
-    // Signup with Firebase
-    const signup = (email, password, nickName) => {
-        firebaseApp
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then((dataUser) => { // Signup successful
-                dataUser.user.updateProfile({
-                    displayName: nickName
-                }).then(() => {
-                    dataUser.user.sendEmailVerification()
-                        .then(() => { // email ok
-                            setAttempt(true)
-                            setAlertType('success')
-                            setMessage('Your account was successfully created! Now you need to verify your e-mail address, please go check your inbox.')
-                        }).catch((err) => { // email ko
-                            setAttempt(true)
-                            setAlertType('error')
-                            setMessage(err.message)
-                        })
-                })
-            }).catch((err) => { // Signup failed
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // form inputs values
+
     const handleChange = e => {
         const value = e.target.value;
         setState({
@@ -93,15 +66,15 @@ function SignUpForm() {
     // register submit
     const handleSubmit = e => {
         e.preventDefault()
-        signup(state.email, state.password, state.nickName)
+        dispatch(signup(state.email, state.password, state.nickName))
     }
 
     return (
         <Container component="main" maxWidth="xs" className={classes.main}>
             <CssBaseline />
             <div className={classes.pageContent}>
-                {attempt
-                    ? <AlertMessage severity={alertType} text={message} />
+                {signUpRedux.attempt
+                    ? <AlertMessage severity={signUpRedux.alertType} text={signUpRedux.message} />
                     : false
                 }
                 <Typography component="h1" variant="h5">

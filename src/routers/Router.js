@@ -1,6 +1,4 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { userIsSignedIn } from '../redux/actions/auth'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import PrivateRoute from './PrivateRoute'
 import PublicRoute from './PublicRoute'
@@ -10,18 +8,30 @@ import ResetPass from '../pages/ResetPass'
 import NotFound from '../pages/NotFound'
 import Auth from '../pages/Auth'
 
-function AppRouter() {
+import firebaseApp from '../services/Firebase.config'
 
-    const dispatch = useDispatch()
-    dispatch(userIsSignedIn())
+function AppRouter() {
+    // state 
+    const [signed, setSigned] = useState(false)
+
+    useEffect(() => {
+        // Check if User is signed in Firebase
+        const userIsSignedIn = () => {
+            firebaseApp.auth().onAuthStateChanged((dataUser) => {
+                if (dataUser) { setSigned(true) }
+                else { setSigned(false) }
+            })
+        }
+        userIsSignedIn()
+    })
 
     return (
         <BrowserRouter>
             <Switch>
-                <PublicRoute exact path='/' component={SignIn} />
-                <PublicRoute path='/register' component={SignUp} />
-                <PublicRoute path='/reset' component={ResetPass} />
-                <PrivateRoute path='/dashboard' component={Auth} />
+                <PublicRoute exact path='/' component={SignIn} signed={signed} />
+                <PublicRoute path='/register' component={SignUp} signed={signed} />
+                <PublicRoute path='/reset' component={ResetPass} signed={signed} />
+                <PrivateRoute path='/dashboard' component={Auth} signed={signed} />
                 <Route><NotFound /></Route>
             </Switch>
         </BrowserRouter>
