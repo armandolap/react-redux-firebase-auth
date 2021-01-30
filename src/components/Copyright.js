@@ -10,7 +10,6 @@ function Copyright({ href, linkText }) {
             </Link>
             {' '}
             {new Date().getFullYear()}
-            {'.'}
         </Typography>
     )
 }

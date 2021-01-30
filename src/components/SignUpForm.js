@@ -43,7 +43,7 @@ function SignUpForm() {
         rpassword: '',
     })
     const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
+    const [alertType, setAlertType] = useState('error')
     const [message, setMessage] = useState('')
     // validation 
     useEffect(() => {

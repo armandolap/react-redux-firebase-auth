@@ -44,7 +44,7 @@ function SignInForm() {
         password: ''
     })
     const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
+    const [alertType, setAlertType] = useState('error')
     const [message, setMessage] = useState('')
     // Signin with Firebase
     const signin = (email, password) => {
@@ -53,10 +53,7 @@ function SignInForm() {
             .signInWithEmailAndPassword(email, password)
             .then(dataUser => {
                 if (dataUser.user.emailVerified) { // login ok
-                    setAttempt(true)
-                    setAlertType('success')
-                    setMessage("Correct LogIn")
-                    // setTimeout(function () { window.location.reload() }, 3000) // reload
+                    console.log('Correct LogIn', dataUser)
                 } else {
                     setAttempt(true)
                     setAlertType('error')
@@ -76,10 +73,7 @@ function SignInForm() {
             .auth()
             .signInWithPopup(provider)
             .then((dataUser) => {
-                setAttempt(true)
-                setAlertType('success')
-                setMessage("Correct LogIn")
-                // setTimeout(function () { window.location.reload() }, 3000) // reload
+                console.log('Correct LogIn', dataUser)
             })
             .catch((err) => {
                 setAttempt(true)

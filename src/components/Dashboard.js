@@ -36,30 +36,20 @@ function Dashboard() {
     const classes = useStyles()
     // state 
     const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
+    const [alertType, setAlertType] = useState('error')
     const [message, setMessage] = useState('')
     // SignOut with Firebase
     const signout = () => {
-        try {
-            firebaseApp
-                .auth()
-                .signOut()
-                .then(() => {
-                    setAttempt(true)
-                    setAlertType('success')
-                    setMessage("Correct LogOut")
-                    // setTimeout(function () { window.location.reload() }, 3000) // reload
-                })
-                .catch(() => {
-                    setAttempt(true)
-                    setAlertType('error')
-                    setMessage('Error, we were not able to log you out. Please try again.')
-                })
-        } catch (err) {
-            setAttempt(true)
-            setAlertType('error')
-            setMessage(err.message)
-        }
+        firebaseApp.auth()
+            .signOut()
+            .then(() => {
+                console.log("Correct LogOut")
+            })
+            .catch(() => {
+                setAttempt(true)
+                setAlertType('error')
+                setMessage('Error, we were not able to log you out. Please try again.')
+            })
     }
     // logout submit
     const handleSubmit = e => {

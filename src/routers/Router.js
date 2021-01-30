@@ -13,17 +13,15 @@ import firebaseApp from '../services/Firebase.config'
 function AppRouter() {
     // state 
     const [signed, setSigned] = useState(false)
-
+    // is Logged User in Firebase ?
     useEffect(() => {
-        // Check if User is signed in Firebase
-        const userIsSignedIn = () => {
-            firebaseApp.auth().onAuthStateChanged((dataUser) => {
-                if (dataUser) { setSigned(true) }
-                else { setSigned(false) }
-            })
-        }
-        userIsSignedIn()
-    })
+        firebaseApp.auth().onAuthStateChanged(dataUser => {
+            const currentUser = firebaseApp.auth().currentUser
+            if (currentUser != null) {
+                if (dataUser.emailVerified) { setSigned(true) }
+            }else{ setSigned(false) }         
+        })
+    }, [])
 
     return (
         <BrowserRouter>

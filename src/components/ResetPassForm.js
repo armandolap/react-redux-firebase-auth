@@ -40,7 +40,7 @@ function ResetPassForm() {
         email: ''
     })
     const [attempt, setAttempt] = useState(false)
-    const [alertType, setAlertType] = useState('')
+    const [alertType, setAlertType] = useState('error')
     const [message, setMessage] = useState('')
     // Reset password with Firebase
     const resetPassword = email  => {
