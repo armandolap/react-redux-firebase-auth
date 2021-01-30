@@ -10,9 +10,3 @@
 
 # Auth with Firebase for React + Redux Apps 
 
-- React Router Dom
-- Material UI core / icons / lab
-- React Material UI Form Validator
-- Firebase / React Redux Firebase
-- Redux / React Redux / Redux Thunk
-
