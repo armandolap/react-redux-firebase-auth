@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
+import { withFirebase } from '../firebase'
+// import { withAuthorization } from '../session'
+import { withRouter } from 'react-router-dom'
+import { compose } from 'recompose'
+
 import { Button, FormControlLabel, Checkbox } from '@material-ui/core'
 import { Container, CssBaseline, Link, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Google } from '@material-ui/icons'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AlertMessage from './AlertMessage'
-
-import firebaseApp from '../services/Firebase.config'
-import firebase from 'firebase/app'
 
 const useStyles = makeStyles((theme) => ({
     pageContent: {
@@ -30,13 +32,19 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(0, 0, 2),
         backgroundColor: '#4c8bf5',
         '&:hover': {
-            backgroundColor: '#126DF6',
+            backgroundColor: '#126DF6'
         }
+    },
+    resendEmailVerif: {
+        width: '100%',
+        cursor: 'pointer'
     }
 }))
 
-function SignInForm() {
-    // Material UI 
+function SignInFormBase(props) {
+
+    // console.log(props)
+
     const classes = useStyles()
     // state 
     const [state, setState] = useState({
@@ -46,42 +54,8 @@ function SignInForm() {
     const [attempt, setAttempt] = useState(false)
     const [alertType, setAlertType] = useState('error')
     const [message, setMessage] = useState('')
-    // Signin with Firebase
-    const signin = (email, password) => {
-        firebaseApp
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(dataUser => {
-                if (dataUser.user.emailVerified) { // login ok
-                    console.log('Correct LogIn', dataUser)
-                } else {
-                    setAttempt(true)
-                    setAlertType('error')
-                    setMessage("You haven't verified your e-mail address.")
-                }
-            })
-            .catch((err) => {
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // Signin with Google Firebase
-    const signinGoogle = () => {
-        const provider = new firebase.auth.GoogleAuthProvider()
-        firebaseApp
-            .auth()
-            .signInWithPopup(provider)
-            .then((dataUser) => {
-                console.log('Correct LogIn', dataUser)
-            })
-            .catch((err) => {
-                setAttempt(true)
-                setAlertType('error')
-                setMessage(err.message)
-            })
-    }
-    // form inputs values
+    const [emailVerif, setEmailVerif] = useState(false)
+
     const handleChange = e => {
         const value = e.target.value;
         setState({
@@ -89,14 +63,58 @@ function SignInForm() {
             [e.target.name]: value
         })
     }
-    // login google
-    const handleGoogleButton = () => {
-        signinGoogle(state.email, state.password)
-    }
     // login email
     const handleSubmit = e => {
         e.preventDefault()
-        signin(state.email, state.password)
+        // Signup with Firebase
+        props.firebase
+            .doSignInWithEmailAndPassword(state.email, state.password)
+            .then(authUser => {
+                if (authUser.user.emailVerified) { // login ok
+                    console.log('Correct LogIn')
+                    props.history.push('/admin')
+                } else {
+                    setAttempt(true)
+                    setAlertType('error')
+                    setMessage("You haven't verified your e-mail address.")
+                    setEmailVerif(true)
+                }
+            })
+            .catch(err => {
+                setAttempt(true)
+                setAlertType('error')
+                setMessage(err.message)
+            })
+        
+    }
+     // Signin with Google Firebase
+    const handleGoogleButton = () => {
+        props.firebase
+            .doSignInWithGoogle()
+            .then((dataUser) => {
+                console.log('Correct LogIn')
+            })
+            .catch((err) => {
+                setAttempt(true)
+                setAlertType('error')
+                setMessage(err.message)
+            })
+    }
+    // resend email verification
+    const resendEmailVerif = () => {
+        props.firebase
+            .doSendEmailVerification()
+            .then(() => {
+                setAttempt(true)
+                setAlertType('success')
+                setMessage("The confirmation email has been sent, please go check your inbox.")
+                setEmailVerif(false)
+            })
+            .catch(err => {
+                setAttempt(true)
+                setAlertType('error')
+                setMessage(err.message)
+            })
     }
 
     return (
@@ -105,6 +123,12 @@ function SignInForm() {
             <div className={classes.pageContent}>
                 {attempt
                     ? <AlertMessage severity={alertType} text={message} />
+                    : false
+                }
+                {emailVerif
+                    ? <Link color="primary" className={classes.resendEmailVerif} onClick={resendEmailVerif}>
+                        <AlertMessage severity='info' text="Click to resend email verification" />
+                      </Link>
                     : false
                 }
                 <Typography component="h1" variant="h5">
@@ -178,5 +202,18 @@ function SignInForm() {
         </Container>
     );
 }
+
+// const condition = authUser => authUser
+
+// export default compose(
+//     withFirebase,
+//     withRouter,
+//     withAuthorization(condition)
+// )(SignInFormBase)
+
+const SignInForm = compose(
+    withRouter,
+    withFirebase,
+)(SignInFormBase)
 
 export default SignInForm
