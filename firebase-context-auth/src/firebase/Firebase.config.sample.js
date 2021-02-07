@@ -1,16 +1,11 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     authDomain: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     databaseURL: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     projectId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     storageBucket: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     messagingSenderId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    appId: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
-const firebaseApp = firebase.initializeApp(firebaseConfig)
-
-export default firebaseApp
+export default firebaseConfig
